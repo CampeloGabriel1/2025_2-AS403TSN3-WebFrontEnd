@@ -1,28 +1,37 @@
-//Declarar Array para teste 
-const usuarios = [];
+const UsuarioModel = require("../models/usuario");
 
 // Lógica para obter todos os usuários
-exports.getAllUsers = (req, res) => {
+exports.getAllUsers = async (req, res) => {
+  try {
+    const usuarios = await UsuarioModel.find();
     res.json(usuarios);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ mensagem: "Erro ao obter usuários", error: error.message });
+  }
+  res.json(null);
 };
 
 // Lógica para criar um novo usuário
-exports.createUser = (req, res) => {
-    const novoUsuario = req.body;
-    usuarios.push(novoUsuario);
-    res.status(201).json(
-        { 'mensagem': 'Usuário criado com sucesso' }
-    );
+exports.createUser = async (req, res) => {
+  const novoUsuario = req.body;
+  try {
+    await UsuarioModel.create(novoUsuario);
+    res.status(201).json({ novoUsuario });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ mensagem: "Erro ao criar usuário", error: error.message });
+  }
 };
 
 exports.getUserById = (req, res) => {
-
-    const userId = req.params.id;
-    console.log(userId);
-    const usuario = usuarios.find(u => u.id == userId);
-    if (!usuario) {
-        return res.status(404).json(
-            { 'mensagem': 'Usuário não encontrado' });
-    }
-    res.json(usuario);
+  const userId = req.params.id;
+  console.log(userId);
+  const usuario = null;
+  if (!usuario) {
+    return res.status(404).json({ mensagem: "Usuário não encontrado" });
+  }
+  res.json(null);
 };
